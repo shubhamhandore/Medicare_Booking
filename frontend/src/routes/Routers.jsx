@@ -5,8 +5,11 @@ import Signup from "../pages/Signup";
 import Contact from "../pages/Contact";
 import Doctors from "../pages/Doctors/Doctors";
 import Doctordetails from "../pages/Doctors/Doctordetails";
+import MyAcoount from "../Dashboard/user-account/MyAcoount";
+import Dashboard from "../Dashboard/doctor-account/Dashboard";
 
 import { Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
 
 const Routers = () => {
   return (
@@ -42,6 +45,22 @@ const Routers = () => {
       <Route
         path="/services"
         element={<Services />}
+      />
+      <Route
+        path="/users/profile/me"
+        element={
+          <ProtectedRoute allowedRoles={["patient"]}>
+            <MyAcoount />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/doctors/profile/me"
+        element={
+          <ProtectedRoute allowedRoles={["doctor"]}>
+            <Dashboard />
+          </ProtectedRoute>
+        }
       />
     </Routes>
   );
