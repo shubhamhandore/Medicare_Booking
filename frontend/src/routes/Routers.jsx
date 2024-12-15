@@ -4,7 +4,7 @@ import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import Contact from "../pages/Contact";
 import Doctors from "../pages/Doctors/Doctors";
-import Doctordetails from "../pages/Doctors/Doctordetails";
+import DoctorDetails from "../pages/Doctors/DoctorDetails";
 import MyAcoount from "../Dashboard/user-account/MyAcoount";
 import Dashboard from "../Dashboard/doctor-account/Dashboard";
 
@@ -28,7 +28,7 @@ const Routers = () => {
       />
       <Route
         path="/doctors/:id"
-        element={<Doctordetails />}
+        element={<DoctorDetails />}
       />
       <Route
         path="/login"

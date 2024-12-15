@@ -7,6 +7,7 @@ import { useState } from "react";
 import starIcon from "../../assets/images/Star.png";
 import DoctorAbout from "./../../pages/Doctors/DoctorAbout";
 import Profile from "./Profile";
+import Appointments from "./Appointments";
 
 const Dashboard = () => {
   const { data, loading, error } = useGetProfile(
@@ -86,7 +87,7 @@ const Dashboard = () => {
                           </span>
                         </div>
                         <p className="text_para font-[15px] lg:max-w-[390px] leading-6">
-                          doctor bio
+                          {data?.bio}
                         </p>
                       </div>
                     </div>
@@ -99,8 +100,10 @@ const Dashboard = () => {
                   </div>
                 )}
 
-                {tab === "appointments" && <div>appointments</div>}
-                {tab === "settings" && <Profile />}
+                {tab === "appointments" && (
+                  <Appointments appointments={data.appointments} />
+                )}
+                {tab === "settings" && <Profile doctorData={data} />}
               </div>
             </div>
           </div>

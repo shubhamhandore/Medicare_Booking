@@ -1,12 +1,12 @@
 import React from "react";
-import heroImg01 from "../assets/images/hero-img01.png";
-import heroImg02 from "../assets/images/hero-img02.png";
-import heroImg03 from "../assets/images/hero-img03.png";
+import heroImg01 from "../assets/images/hero-img01.jpeg";
+import heroImg02 from "../assets/images/hero-img02.jpeg";
+import heroImg03 from "../assets/images/hero-img03.jpeg";
 import icon01 from "../assets/images/icon01.png";
 import icon02 from "../assets/images/icon02.png";
 import icon03 from "../assets/images/icon03.png";
-import featureImg from "../assets/images/feature-img.png";
-import faqImg from "../assets/images/faq-img.png";
+import featureImg from "../assets/images/feature-img.jpeg";
+import faqImg from "../assets/images/faq-img.jpeg";
 import videoImg from "../assets/images/video-icon.png";
 import avatarImg from "../assets/images/avatar-icon.png";
 import { Link } from "react-router-dom";
@@ -31,10 +31,12 @@ const Home = () => {
                   We help patients live a healthy, longer life.
                 </h1>
                 <p className="text_para">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Error repudiandae aut quo possimus animi qui eveniet sequi
-                  earum sapiente obcaecati ad magni corporis minus asperiores
-                  voluptates modi cupiditate laudantium corrupti id
+                  Our hospital provides comprehensive healthcare services,
+                  including emergency care, surgery, maternity, pediatrics,
+                  cardiology, oncology, orthopedics, and rehabilitation. We are
+                  dedicated to compassionate, patient-centered care with
+                  advanced medical technology and a highly skilled, empathetic
+                  medical team.
                 </p>
 
                 <button className="btn">Request an Appointment</button>
@@ -44,7 +46,7 @@ const Home = () => {
               <div className="mt-[30px] lg:mt-[70px] flex flex-col lg:flex-row lg:items-center gap-5 lg:gap-[30px]">
                 <div>
                   <h2 className="text-[36px] leading-[56px] lg:text-[44px] lg:leading-[54px] font-[700] text-headingColor">
-                    30+
+                    3+
                   </h2>
                   <span className="w-[100px] h-2 bg-yellowColor rounded-full block mt-[14px]"></span>
                   <p className="text_para">Years of Experience</p>
@@ -52,7 +54,7 @@ const Home = () => {
 
                 <div>
                   <h2 className="text-[36px] leading-[56px] lg:text-[44px] lg:leading-[54px] font-[700] text-headingColor">
-                    15+
+                    1
                   </h2>
                   <span className="w-[100px] h-2 bg-purpleColor rounded-full block mt-[14px]"></span>
                   <p className="text_para">Clinic Location</p>
@@ -266,7 +268,7 @@ const Home = () => {
                     alt=""
                   />
                   <h4 className="text-[10px] leading-3 lg:text-[16px] lg:leading-[22px] font-[700] text-headingColor">
-                    Waynne Collins
+                    Dr. Tejas Narode
                   </h4>
                 </div>
               </div>

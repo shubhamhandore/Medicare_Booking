@@ -9,10 +9,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        primaryColor: "#0067FF",
-        yellowColor: "#FEB60D",
-        purpleColor: "#9771FF",
-        irisBlueColor: "#01B5C5",
+        primaryColor: "#059212",
+        yellowColor: "#06D001",
+        purpleColor: "#9BEC00",
+        irisBlueColor: "#9BEC00",
         headingColor: "#181A1E",
         textColor: "#4E545F",
       },
