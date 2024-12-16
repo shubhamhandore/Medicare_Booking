@@ -5,9 +5,9 @@ import Signup from "../pages/Signup";
 import Contact from "../pages/Contact";
 import Doctors from "../pages/Doctors/Doctors";
 import DoctorDetails from "../pages/Doctors/DoctorDetails";
-import MyAcoount from "../Dashboard/user-account/MyAcoount";
+import MyAccount from "../Dashboard/user-account/MyAccount";
 import Dashboard from "../Dashboard/doctor-account/Dashboard";
-
+import CheckoutSuccess from "../pages/CheckoutSuccess";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -47,10 +47,14 @@ const Routers = () => {
         element={<Services />}
       />
       <Route
+        path="/checkout-success"
+        element={<CheckoutSuccess />}
+      />
+      <Route
         path="/users/profile/me"
         element={
           <ProtectedRoute allowedRoles={["patient"]}>
-            <MyAcoount />
+            <MyAccount />
           </ProtectedRoute>
         }
       />

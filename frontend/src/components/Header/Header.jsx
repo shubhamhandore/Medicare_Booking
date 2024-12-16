@@ -1,53 +1,40 @@
-import { useEffect, useRef, useContext } from "react";
+import { useEffect, useRef, useCallback, useContext, useState } from "react";
 import logo from "../../assets/images/logo.png";
 import { NavLink, Link } from "react-router-dom";
 import { BiMenu } from "react-icons/bi";
 import { authContext } from "../../context/AuthContext";
 
 const navLinks = [
-  {
-    path: "/home",
-    display: "Home",
-  },
-  {
-    path: "/doctors",
-    display: "Find a Doctor",
-  },
-  {
-    path: "/services",
-    display: "Services",
-  },
-  {
-    path: "/contact",
-    display: "Contact",
-  },
+  { path: "/home", display: "Home" },
+  { path: "/doctors", display: "Find a Doctor" },
+  { path: "/services", display: "Services" },
+  { path: "/contact", display: "Contact" },
 ];
 
 const Header = () => {
   const headerRef = useRef(null);
   const menuRef = useRef(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const { user, role, token } = useContext(authContext);
 
-  const handleStickyHeader = () => {
-    window.addEventListener("scroll", () => {
-      if (
-        document.body.scrollTop > 80 ||
-        document.documentElement.scrollTop > 80
-      ) {
-        headerRef.current.classList.add("sticky_header");
+  const handleStickyHeader = useCallback(() => {
+    const onScroll = () => {
+      if (window.scrollY > 80) {
+        headerRef.current?.classList.add("sticky_header");
       } else {
-        headerRef.current.classList.add("sticky_header");
+        headerRef.current?.classList.remove("sticky_header");
       }
-    });
-  };
+    };
+    window.addEventListener("scroll", onScroll);
+
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     handleStickyHeader();
+  }, [handleStickyHeader]);
 
-    return () => window.removeEventListener("scroll", handleStickyHeader);
-  });
-
-  const toggleMenu = () => menuRef.current.classList.toggle("show_menu");
+  const toggleMenu = () => setMenuOpen((prevState) => !prevState);
 
   return (
     <header
@@ -56,27 +43,28 @@ const Header = () => {
     >
       <div className="container">
         <div className="flex items-center justify-between">
-          {/* ========= logo ========= */}
+          {/* Logo */}
           <div>
             <img
               src={logo}
-              alt=""
+              alt="Logo"
             />
           </div>
 
-          {/* ========= menu ========= */}
-          <div
-            className="navigation"
+          {/* Navigation Menu */}
+          <nav
             ref={menuRef}
-            onClick={toggleMenu}
+            className={`navigation ${
+              menuOpen ? "show_menu" : "hidden md:flex"
+            }`}
           >
-            <ul className="menu flex items-center gap-[2.7rem]">
+            <ul className="menu flex flex-col md:flex-row items-center gap-[2.7rem]">
               {navLinks.map((link, index) => (
                 <li key={index}>
                   <NavLink
                     to={link.path}
-                    className={(navClass) =>
-                      navClass.isActive
+                    className={({ isActive }) =>
+                      isActive
                         ? "text-primaryColor text-[16px] leading-7 font-[600]"
                         : "text-textColor text-[16px] leading-7 font-[500] hover:text-primaryColor"
                     }
@@ -86,28 +74,28 @@ const Header = () => {
                 </li>
               ))}
             </ul>
-          </div>
-          {/* ========= nav right ========= */}
+          </nav>
+
+          {/* Right Section */}
           <div className="flex items-center gap-4">
             {token && user ? (
-              <div>
-                <Link
-                  to={`${
-                    role === "doctor"
-                      ? "/doctors/profile/me"
-                      : "/users/profile/me"
-                  }`}
-                >
-                  <figure className="w-[35px] h-[35px] rounded-full cursor-pointer">
-                    <img
-                      src={user?.photo}
-                      className="w-full rounded-full"
-                      alt=""
-                    />
-                  </figure>
-                  <h2>{user?.name}</h2>
-                </Link>
-              </div>
+              <Link
+                to={
+                  role === "doctor"
+                    ? "/doctors/profile/me"
+                    : "/users/profile/me"
+                }
+                className="flex items-center gap-2"
+              >
+                <figure className="w-[35px] h-[35px] rounded-full cursor-pointer">
+                  <img
+                    src={user.photo || "/default-avatar.png"}
+                    className="w-full h-full object-cover rounded-full"
+                    alt={user.name || "User"}
+                  />
+                </figure>
+                <h2 className="text-[14px] font-semibold">{user.name}</h2>
+              </Link>
             ) : (
               <Link to="/login">
                 <button className="bg-primaryColor py-2 px-6 text-white font-[600] h-[44px] flex items-center justify-center rounded-[50px]">
@@ -116,6 +104,7 @@ const Header = () => {
               </Link>
             )}
 
+            {/* Mobile Menu Toggle */}
             <span
               className="md:hidden"
               onClick={toggleMenu}

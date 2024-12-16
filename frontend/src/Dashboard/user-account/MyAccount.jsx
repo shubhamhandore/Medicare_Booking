@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { authContext } from "./../../context/AuthContext";
+import { authContext } from "../../context/AuthContext";
 
 import MyBookings from "./MyBookings";
 import Profile from "./Profile";
@@ -10,7 +10,7 @@ import { BASE_URL } from "../../config";
 import Loading from "../../components/Loader/Loading";
 import Error from "../../components/Loader/Error";
 
-const MyAcoount = () => {
+const MyAccount = () => {
   const { dispatch } = useContext(authContext);
   const [tab, setTab] = useState("bookings");
 
@@ -106,4 +106,4 @@ const MyAcoount = () => {
   );
 };
 
-export default MyAcoount;
+export default MyAccount;
