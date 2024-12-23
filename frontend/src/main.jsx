@@ -7,10 +7,13 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContextProvider } from "./context/AuthContext.jsx";
 
+// Rendering the App with necessary context and routing
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
+      {/* AuthContextProvider wraps the app to provide authentication context */}
       <AuthContextProvider>
+        {/* Toast notifications setup */}
         <ToastContainer
           theme="dark"
           position="top-right"
@@ -18,6 +21,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           closeOnClick
           pauseOnHover={false}
         />
+        {/* Main Application */}
         <App />
       </AuthContextProvider>
     </BrowserRouter>

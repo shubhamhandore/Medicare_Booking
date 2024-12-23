@@ -38,10 +38,11 @@ const Profile = ({ user }) => {
   const handleFileInputChange = async (event) => {
     const file = event.target.files[0];
 
-    const data = await uploadImageToCloudinary(file);
-
-    setSelectedFile(data.url);
-    setFormData({ ...formData, photo: data.url });
+    if (file) {
+      const data = await uploadImageToCloudinary(file);
+      setSelectedFile(file);
+      setFormData({ ...formData, photo: data.url });
+    }
   };
 
   const submitHandler = async (event) => {
@@ -76,6 +77,7 @@ const Profile = ({ user }) => {
   return (
     <div className="mt-10">
       <form onSubmit={submitHandler}>
+        {/* Name Input */}
         <div className="mb-5">
           <input
             type="text"
@@ -83,11 +85,12 @@ const Profile = ({ user }) => {
             name="name"
             value={formData.name}
             onChange={handleInputChange}
-            className="w-full pr-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor  cursor-pointer"
+            className="w-full pr-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-pointer"
             required
           />
         </div>
 
+        {/* Email Input */}
         <div className="mb-5">
           <input
             type="email"
@@ -95,12 +98,13 @@ const Profile = ({ user }) => {
             name="email"
             value={formData.email}
             onChange={handleInputChange}
-            className="w-full pr-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor  cursor-pointer"
+            className="w-full pr-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-pointer"
             aria-readonly
             readOnly
           />
         </div>
 
+        {/* Password Input */}
         <div className="mb-5">
           <input
             type="password"
@@ -108,9 +112,11 @@ const Profile = ({ user }) => {
             name="password"
             value={formData.password}
             onChange={handleInputChange}
-            className="w-full pr-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor  cursor-pointer"
+            className="w-full pr-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-pointer"
           />
         </div>
+
+        {/* Blood Type Input */}
         <div className="mb-5">
           <input
             type="text"
@@ -118,11 +124,12 @@ const Profile = ({ user }) => {
             name="bloodType"
             value={formData.bloodType}
             onChange={handleInputChange}
-            className="w-full pr-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor  cursor-pointer"
+            className="w-full pr-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-pointer"
             required
           />
         </div>
 
+        {/* Gender Select */}
         <div className="mb-5 flex items-center justify-between">
           <label className="text-headingColor font-bold text-[16px] leading-7">
             Gender:
@@ -140,12 +147,13 @@ const Profile = ({ user }) => {
           </label>
         </div>
 
+        {/* Profile Photo Input */}
         <div className="mb-5 flex items-center gap-3">
           {formData.photo && (
             <figure className="w-[60px] h-[60px] rounded-full border-2 border-solid border-primaryColor flex items-center justify-center">
               <img
                 src={formData.photo}
-                alt=""
+                alt="Profile"
                 className="w-full rounded-full"
               />
             </figure>
@@ -157,7 +165,7 @@ const Profile = ({ user }) => {
               id="customFile"
               onChange={handleFileInputChange}
               accept=".jpg, .png"
-              className="absolute top-0 left-0 w-full h-full opacity-0 cusrsor-pointer"
+              className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
             />
             <label
               htmlFor="customFile"
@@ -168,9 +176,10 @@ const Profile = ({ user }) => {
           </div>
         </div>
 
+        {/* Submit Button */}
         <div className="mt-7">
           <button
-            disabled={loading && true}
+            disabled={loading}
             type="submit"
             className="w-full bg-primaryColor text-white text-[18px] leading-[30px] rounded-lg px-4 py-3"
           >

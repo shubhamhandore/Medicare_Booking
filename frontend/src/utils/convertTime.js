@@ -14,7 +14,7 @@ const convertTime = (time) => {
   }
 
   return (
-    hours.toString().padStart(2) +
+    hours.toString().padStart(2, "0") + // Ensure padding with '0' for hours
     ":" +
     minutes.toString().padStart(2, "0") +
     " " +

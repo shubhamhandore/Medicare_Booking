@@ -82,3 +82,36 @@ body {
     display: block;
   }
 }
+
+/* Example styles (you can customize them as needed) */
+.form_label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.form_input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.btn {
+  background-color: #0066ff;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #0056cc;
+}
+
+.text_para {
+  font-size: 1rem;
+  color: #666;
+}

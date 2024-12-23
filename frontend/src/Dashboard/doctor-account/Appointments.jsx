@@ -1,11 +1,12 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import React from "react";
 import { formateDate } from "../../utils/formateDate";
 
 const Appointments = ({ appointments }) => {
   return (
-    <table className="w-full text-left text-sm text-grey-500">
-      <thead className="text-xs text-grey-700 uppercase bg-grey-50">
+    <table className="w-full text-left text-sm text-gray-500">
+      <thead className="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
           <th
             scope="col"
@@ -45,35 +46,33 @@ const Appointments = ({ appointments }) => {
           <tr key={item._id}>
             <th
               scope="row"
-              className="flex item-center px-6 py-4 text-grey-900 whitespace-nowrap"
+              className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap"
             >
               <img
-                src={item.user.photo}
+                src={item.user?.photo || "/path/to/default-avatar.png"} // Fallback image
                 className="w-10 h-10 rounded-full"
-                alt=""
+                alt={item.user?.name || "User Avatar"}
               />
               <div className="pl-3">
-                <div className="text-base font-semibold">{item.user.name}</div>
-                <div className="text-normal text-grey-500">
-                  {item.user.email}
+                <div className="text-base font-semibold">
+                  {item.user?.name || "Unknown User"}
+                </div>
+                <div className="text-normal text-gray-500">
+                  {item.user?.email || "No Email"}
                 </div>
               </div>
             </th>
-            <td className="px-6 py-4">{item.user.gender}</td>
+            <td className="px-6 py-4">{item.user?.gender || "Not Provided"}</td>
             <td className="px-6 py-4">
-              {item.isPaid && (
+              {item.isPaid ? (
                 <div className="flex items-center">
-                  <div className="h-2.5 w-2.5 rounded-full bg-green-500 mr-2">
-                    Paid
-                  </div>
+                  <div className="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div>
+                  Paid
                 </div>
-              )}
-
-              {item.isPaid && (
+              ) : (
                 <div className="flex items-center">
-                  <div className="h-2.5 w-2.5 rounded-full bg-red-500 mr-2">
-                    Unpaid
-                  </div>
+                  <div className="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div>
+                  Unpaid
                 </div>
               )}
             </td>

@@ -50,8 +50,13 @@ const Doctors = () => {
       <section>
         <div className="container">
           {loading && <Loader />}
-          {error && <Error />}
-          {!loading && !error && doctors.length === 0 && (
+          {error && <Error message={error} />}
+          {!loading && !error && doctors.length === 0 && !debounceQuery && (
+            <p className="text-center">
+              Please enter a search term to find doctors.
+            </p>
+          )}
+          {!loading && !error && doctors.length === 0 && debounceQuery && (
             <p className="text-center">
               No doctors found. Please try another search.
             </p>

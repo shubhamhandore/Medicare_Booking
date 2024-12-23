@@ -47,7 +47,7 @@ const Header = () => {
           <div>
             <img
               src={logo}
-              alt="Logo"
+              alt="Company Logo"
             />
           </div>
 
@@ -86,12 +86,13 @@ const Header = () => {
                     : "/users/profile/me"
                 }
                 className="flex items-center gap-2"
+                onClick={() => setMenuOpen(false)} // Close the menu on link click
               >
                 <figure className="w-[35px] h-[35px] rounded-full cursor-pointer">
                   <img
                     src={user.photo || "/default-avatar.png"}
                     className="w-full h-full object-cover rounded-full"
-                    alt={user.name || "User"}
+                    alt={user.name || "User Profile"}
                   />
                 </figure>
                 <h2 className="text-[14px] font-semibold">{user.name}</h2>

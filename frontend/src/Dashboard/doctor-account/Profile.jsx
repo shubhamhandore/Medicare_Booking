@@ -26,7 +26,6 @@ const Profile = ({ doctorData }) => {
     setFormData({
       name: doctorData?.name,
       email: doctorData?.email,
-
       phone: doctorData?.phone,
       bio: doctorData?.bio,
       gender: doctorData?.gender,
@@ -54,6 +53,12 @@ const Profile = ({ doctorData }) => {
   const updateProfileHandler = async (e) => {
     e.preventDefault();
 
+    // Form Validation: Ensure required fields are filled before submission
+    if (!formData.name || !formData.email || !formData.phone || !formData.bio) {
+      toast.error("Please fill in all the required fields.");
+      return;
+    }
+
     try {
       const res = await fetch(`${BASE_URL}/doctors/${doctorData._id}`, {
         method: "PUT",
@@ -75,81 +80,35 @@ const Profile = ({ doctorData }) => {
     }
   };
 
-  //reusable function for adding item
-  const addItem = (key, item) => {
+  // Generic add and delete item handler
+  const handleAddItem = (key, defaultItem) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [key]: [...prevFormData[key], item],
+      [key]: [...prevFormData[key], defaultItem],
     }));
   };
 
-  //resuable function for deleting item
-  const deleteItem = (key, index) => {
+  const handleDeleteItem = (key, index) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [key]: prevFormData[key].filter((_, i) => i != index),
+      [key]: prevFormData[key].filter((_, i) => i !== index),
     }));
   };
 
-  const addExperience = (e) => {
-    e.preventDefault();
-
-    addItem("experiences", {
-      startingDate: "",
-      endingDate: "",
-      degree: "PHD",
-      university: "Dhaka Medical College",
-    });
-  };
-
-  const handleExperiencesChange = (event, index) => {
-    handleReusableChangeFunc("qualifications", index, event);
-  };
-
-  const deleteExperience = (e, index) => {
-    e.preventDefault();
-    deleteItem("experiences", index);
-  };
-
-  //reusable input change function
-  const handleReusableChangeFunc = (key, index, event) => {
+  // Generic change handler for nested data like qualifications, experiences, timeSlots
+  const handleNestedInputChange = (key, index, event) => {
     const { name, value } = event.target;
 
     setFormData((prevFormData) => {
-      const updateItems = [...prevFormData[key]];
+      const updatedItems = [...prevFormData[key]];
+      updatedItems[index][name] = value;
 
-      updateItems[index][name] = value;
-
-      return {
-        ...prevFormData,
-        [key]: updateItems,
-      };
+      return { ...prevFormData, [key]: updatedItems };
     });
   };
 
-  const addTimeSlot = (e) => {
-    e.preventDefault();
-
-    addItem("timeSlots", {
-      day: "Sunday",
-      startingTime: "10:00",
-      endingTime: "04:00",
-    });
-  };
-
-  const handleTimeSlotChange = (event, index) => {
-    handleReusableChangeFunc("qualifications", index, event);
-  };
-
-  const deleteTimeSlot = (e, index) => {
-    e.preventDefault();
-    deleteItem("timeSlots", index);
-  };
-
-  const addQualification = (e) => {
-    e.preventDefault();
-
-    addItem("qualifications", {
+  const handleAddQualification = () => {
+    handleAddItem("qualifications", {
       startingDate: "",
       endingDate: "",
       degree: "",
@@ -157,13 +116,33 @@ const Profile = ({ doctorData }) => {
     });
   };
 
-  const handleQualificationChange = (event, index) => {
-    handleReusableChangeFunc("qualifications", index, event);
+  const handleDeleteQualification = (index) => {
+    handleDeleteItem("qualifications", index);
   };
 
-  const deleteQualification = (e, index) => {
-    e.preventDefault();
-    deleteItem("qualifications", index);
+  const handleAddExperience = () => {
+    handleAddItem("experiences", {
+      startingDate: "",
+      endingDate: "",
+      position: "",
+      hospital: "",
+    });
+  };
+
+  const handleDeleteExperience = (index) => {
+    handleDeleteItem("experiences", index);
+  };
+
+  const handleAddTimeSlot = () => {
+    handleAddItem("timeSlots", {
+      day: "Sunday",
+      startingTime: "10:00",
+      endingTime: "04:00",
+    });
+  };
+
+  const handleDeleteTimeSlot = (index) => {
+    handleDeleteItem("timeSlots", index);
   };
 
   return (
@@ -182,6 +161,7 @@ const Profile = ({ doctorData }) => {
             onChange={handleInputChange}
             placeholder="Full Name"
             className="form_input"
+            required
           />
         </div>
         <div className="mb-5">
@@ -195,7 +175,7 @@ const Profile = ({ doctorData }) => {
             className="form_input"
             readOnly
             aria-readonly
-            disabled="true"
+            disabled
           />
         </div>
         <div className="mb-5">
@@ -207,6 +187,7 @@ const Profile = ({ doctorData }) => {
             onChange={handleInputChange}
             placeholder="Phone number"
             className="form_input"
+            required
           />
         </div>
         <div className="mb-5">
@@ -219,6 +200,7 @@ const Profile = ({ doctorData }) => {
             placeholder="Bio"
             className="form_input"
             maxLength={100}
+            required
           />
         </div>
 
@@ -231,6 +213,7 @@ const Profile = ({ doctorData }) => {
                 value={formData.gender}
                 onChange={handleInputChange}
                 className="form_input py-3.5"
+                required
               >
                 <option value="">Select</option>
                 <option value="male">Male</option>
@@ -245,6 +228,7 @@ const Profile = ({ doctorData }) => {
                 value={formData.specialization}
                 onChange={handleInputChange}
                 className="form_input py-3.5"
+                required
               >
                 <option value="">Select</option>
                 <option value="surgeon">Surgeon</option>
@@ -257,7 +241,7 @@ const Profile = ({ doctorData }) => {
               <p className="form_label">Fees</p>
               <input
                 type="number"
-                name="ticket price"
+                name="ticketPrice"
                 value={formData.ticketPrice}
                 className="form_input"
                 onChange={handleInputChange}
@@ -266,211 +250,240 @@ const Profile = ({ doctorData }) => {
           </div>
         </div>
 
+        {/* Qualifications Section */}
         <div className="mb-5">
           <p className="form_label">Qualifications*</p>
           {formData.qualifications?.map((item, index) => (
             <div key={index}>
-              <div>
-                <div className="grid grid-cols-2 gap-5">
-                  <div>
-                    <p className="form_label">Starting Date*</p>
-                    <input
-                      type="date"
-                      name="startingDate"
-                      value={item.startingDate}
-                      className="form_input"
-                      onChange={(e) => handleQualificationChange(e, index)}
-                    />
-                  </div>
-
-                  <div>
-                    <p className="form_label">Ending Date*</p>
-                    <input
-                      type="date"
-                      name="endingDate"
-                      value={item.endingDate}
-                      className="form_input"
-                      onChange={(e) => handleQualificationChange(e, index)}
-                    />
-                  </div>
+              <div className="grid grid-cols-2 gap-5">
+                <div>
+                  <p className="form_label">Starting Date*</p>
+                  <input
+                    type="date"
+                    name="startingDate"
+                    value={item.startingDate}
+                    className="form_input"
+                    onChange={(e) =>
+                      handleNestedInputChange("qualifications", index, e)
+                    }
+                    required
+                  />
                 </div>
 
-                <div className="grid grid-cols-2 gap-5 mt-5">
-                  <div>
-                    <p className="form_label">Degree</p>
-                    <input
-                      type="text"
-                      name="degree"
-                      value={item.degree}
-                      className="form_input"
-                      onChange={(e) => handleQualificationChange(e, index)}
-                    />
-                  </div>
-
-                  <div>
-                    <p className="form_label">University*</p>
-                    <input
-                      type="text"
-                      name="university"
-                      value={item.university}
-                      className="form_input"
-                      onChange={(e) => handleQualificationChange(e, index)}
-                    />
-                  </div>
+                <div>
+                  <p className="form_label">Ending Date*</p>
+                  <input
+                    type="date"
+                    name="endingDate"
+                    value={item.endingDate}
+                    className="form_input"
+                    onChange={(e) =>
+                      handleNestedInputChange("qualifications", index, e)
+                    }
+                    required
+                  />
                 </div>
-
-                <button
-                  onClick={(e) => deleteQualification(e, index)}
-                  className="bg-red-600 p-2 rounded-full text-white text-[18px] mt-2 mb-[30px] cursor-pointer"
-                >
-                  <AiOutlineDelete />
-                </button>
               </div>
+
+              <div className="grid grid-cols-2 gap-5 mt-5">
+                <div>
+                  <p className="form_label">Degree</p>
+                  <input
+                    type="text"
+                    name="degree"
+                    value={item.degree}
+                    className="form_input"
+                    onChange={(e) =>
+                      handleNestedInputChange("qualifications", index, e)
+                    }
+                  />
+                </div>
+
+                <div>
+                  <p className="form_label">University*</p>
+                  <input
+                    type="text"
+                    name="university"
+                    value={item.university}
+                    className="form_input"
+                    onChange={(e) =>
+                      handleNestedInputChange("qualifications", index, e)
+                    }
+                    required
+                  />
+                </div>
+              </div>
+
+              <button
+                onClick={() => handleDeleteQualification(index)}
+                className="bg-red-600 p-2 rounded-full text-white text-[18px] mt-2 mb-[30px] cursor-pointer"
+              >
+                <AiOutlineDelete />
+              </button>
             </div>
           ))}
           <button
-            onClick={addQualification}
+            onClick={handleAddQualification}
             className="bg-[#000] py-2 px-5 rounded text-white h-fit cursor-pointer"
           >
             Add Qualification
           </button>
         </div>
 
+        {/* Experiences Section */}
         <div className="mb-5">
           <p className="form_label">Experiences*</p>
           {formData.experiences?.map((item, index) => (
             <div key={index}>
-              <div>
-                <div className="grid grid-cols-2 gap-5">
-                  <div>
-                    <p className="form_label">Starting Date*</p>
-                    <input
-                      type="date"
-                      name="startingDate"
-                      value={item.startingDate}
-                      className="form_input"
-                      onClick={(e) => handleExperiencesChange(e, index)}
-                    />
-                  </div>
-
-                  <div>
-                    <p className="form_label">Ending Date*</p>
-                    <input
-                      type="date"
-                      name="endingDate"
-                      value={item.endingDate}
-                      className="form_input"
-                      onClick={(e) => handleExperiencesChange(e, index)}
-                    />
-                  </div>
+              <div className="grid grid-cols-2 gap-5">
+                <div>
+                  <p className="form_label">Starting Date*</p>
+                  <input
+                    type="date"
+                    name="startingDate"
+                    value={item.startingDate}
+                    className="form_input"
+                    onChange={(e) =>
+                      handleNestedInputChange("experiences", index, e)
+                    }
+                    required
+                  />
                 </div>
 
-                <div className="grid grid-cols-2 gap-5 mt-5">
-                  <div>
-                    <p className="form_label">Position</p>
-                    <input
-                      type="text"
-                      name="position"
-                      value={item.position}
-                      className="form_input"
-                      onClick={(e) => handleExperiencesChange(e, index)}
-                    />
-                  </div>
-
-                  <div>
-                    <p className="form_label">Hospital*</p>
-                    <input
-                      type="text"
-                      name="hospital"
-                      value={item.hospital}
-                      className="form_input"
-                      onChange={(e) => handleExperiencesChange(e, index)}
-                    />
-                  </div>
+                <div>
+                  <p className="form_label">Ending Date*</p>
+                  <input
+                    type="date"
+                    name="endingDate"
+                    value={item.endingDate}
+                    className="form_input"
+                    onChange={(e) =>
+                      handleNestedInputChange("experiences", index, e)
+                    }
+                    required
+                  />
                 </div>
-
-                <button
-                  onClick={(e) => deleteExperience(e, index)}
-                  className="bg-red-600 p-2 rounded-full text-white text-[18px] mt-2 mb-[30px] cursor-pointer"
-                >
-                  <AiOutlineDelete />
-                </button>
               </div>
+
+              <div className="grid grid-cols-2 gap-5 mt-5">
+                <div>
+                  <p className="form_label">Position</p>
+                  <input
+                    type="text"
+                    name="position"
+                    value={item.position}
+                    className="form_input"
+                    onChange={(e) =>
+                      handleNestedInputChange("experiences", index, e)
+                    }
+                  />
+                </div>
+
+                <div>
+                  <p className="form_label">Hospital*</p>
+                  <input
+                    type="text"
+                    name="hospital"
+                    value={item.hospital}
+                    className="form_input"
+                    onChange={(e) =>
+                      handleNestedInputChange("experiences", index, e)
+                    }
+                    required
+                  />
+                </div>
+              </div>
+
+              <button
+                onClick={() => handleDeleteExperience(index)}
+                className="bg-red-600 p-2 rounded-full text-white text-[18px] mt-2 mb-[30px] cursor-pointer"
+              >
+                <AiOutlineDelete />
+              </button>
             </div>
           ))}
           <button
-            onClick={addExperience}
+            onClick={handleAddExperience}
             className="bg-[#000] py-2 px-5 rounded text-white h-fit cursor-pointer"
           >
             Add Experience
           </button>
         </div>
 
+        {/* Time Slots Section */}
         <div className="mb-5">
           <p className="form_label">Time Slots*</p>
           {formData.timeSlots?.map((item, index) => (
             <div key={index}>
-              <div>
-                <div className="grid grid-cols-2 md:grid-cols-4 mb-[30px] gap-5">
-                  <div>
-                    <p className="form_label">Day*</p>
-                    <select
-                      name="day"
-                      value={item.day}
-                      className="form_input py-3.5"
-                      onChange={(e) => handleTimeSlotChange(e, index)}
-                    >
-                      <option value="">Select</option>
-                      <option value="saturday">Saturday</option>
-                      <option value="sunday">Sunday</option>
-                      <option value="monday">Monday</option>
-                      <option value="tuesday">Tuesday</option>
-                      <option value="wednesday">Wednesday</option>
-                      <option value="thursday">Thursday</option>
-                      <option value="friday">Friday</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <p className="form_label">Starting Time*</p>
-                    <input
-                      type="time"
-                      name="startingTime"
-                      value={item.startingTime}
-                      className="form_input"
-                      onChange={(e) => handleTimeSlotChange(e, index)}
-                    />
-                  </div>
-                  <div>
-                    <p className="form_label">Ending Time*</p>
-                    <input
-                      type="time"
-                      name="endingTime"
-                      value={item.endingTime}
-                      className="form_input"
-                      onChange={(e) => handleTimeSlotChange(e, index)}
-                    />
-                  </div>
-                  <div
-                    onClick={(e) => deleteTimeSlot(e, index)}
-                    className="flex items-center"
+              <div className="grid grid-cols-2 md:grid-cols-4 mb-[30px] gap-5">
+                <div>
+                  <p className="form_label">Day*</p>
+                  <select
+                    name="day"
+                    value={item.day}
+                    className="form_input py-3.5"
+                    onChange={(e) =>
+                      handleNestedInputChange("timeSlots", index, e)
+                    }
+                    required
                   >
-                    <button className="bg-red-600 p-2 rounded-full text-white text-[18px] cursor-pointer mt-6">
-                      <AiOutlineDelete />
-                    </button>
-                  </div>
+                    <option value="">Select</option>
+                    <option value="saturday">Saturday</option>
+                    <option value="sunday">Sunday</option>
+                    <option value="monday">Monday</option>
+                    <option value="tuesday">Tuesday</option>
+                    <option value="wednesday">Wednesday</option>
+                    <option value="thursday">Thursday</option>
+                    <option value="friday">Friday</option>
+                  </select>
+                </div>
+
+                <div>
+                  <p className="form_label">Starting Time*</p>
+                  <input
+                    type="time"
+                    name="startingTime"
+                    value={item.startingTime}
+                    className="form_input"
+                    onChange={(e) =>
+                      handleNestedInputChange("timeSlots", index, e)
+                    }
+                    required
+                  />
+                </div>
+                <div>
+                  <p className="form_label">Ending Time*</p>
+                  <input
+                    type="time"
+                    name="endingTime"
+                    value={item.endingTime}
+                    className="form_input"
+                    onChange={(e) =>
+                      handleNestedInputChange("timeSlots", index, e)
+                    }
+                    required
+                  />
+                </div>
+                <div
+                  onClick={() => handleDeleteTimeSlot(index)}
+                  className="flex items-center"
+                >
+                  <button className="bg-red-600 p-2 rounded-full text-white text-[18px] cursor-pointer mt-6">
+                    <AiOutlineDelete />
+                  </button>
                 </div>
               </div>
             </div>
           ))}
           <button
-            onClick={addTimeSlot}
+            onClick={handleAddTimeSlot}
             className="bg-[#000] py-2 px-5 rounded text-white h-fit cursor-pointer"
           >
             Add TimeSlot
           </button>
         </div>
 
+        {/* About Section */}
         <div className="mb-5">
           <p className="form_label">About*</p>
           <textarea
@@ -480,42 +493,35 @@ const Profile = ({ doctorData }) => {
             placeholder="Write about you"
             onChange={handleInputChange}
             className="form_input"
+            required
           ></textarea>
         </div>
 
+        {/* Photo Upload Section */}
         <div className="mb-5 flex items-center gap-3">
           {formData.photo && (
-            <figure className="w-[60px] h-[60px] rounded-full border-2 border-solid border-primaryColor flex items-center justify-center">
+            <figure className="w-[60px] h-[60px] rounded-full border-2 overflow-hidden">
               <img
                 src={formData.photo}
-                alt=""
-                className="w-full rounded-full"
+                alt="profile"
+                className="w-full h-full object-cover"
               />
             </figure>
           )}
-          <div className="relative w-[130px] h-[50px]">
-            <input
-              type="file"
-              name="photo"
-              id="customFile"
-              onChange={handleFileInputChange}
-              accept=".jpg, .png"
-              className="absolute top-0 left-0 w-full h-full opacity-0 cusrsor-pointer"
-            />
-            <label
-              htmlFor="customFile"
-              className="absolute top-0 left-0 w-full h-full flex items-center px-[0.75rem] py-[0.375rem] text-[15px] leading-6 overflow-hidden bg-[#0066ff46] text-headingColor font-semibold rounded-lg truncate cursor-pointer"
-            >
-              Upload Photo
-            </label>
-          </div>
+          <input
+            type="file"
+            accept="image/*"
+            className="form_input"
+            onChange={handleFileInputChange}
+          />
         </div>
 
-        <div className="mt-7">
+        {/* Update Profile Button */}
+        <div className="text-center">
           <button
             type="submit"
             onClick={updateProfileHandler}
-            className="bg-primaryColor text-white text-[18px] leading-[30px] w-full py-3 px-4 rounded-lg"
+            className="form_submit_button"
           >
             Update Profile
           </button>

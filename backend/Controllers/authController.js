@@ -3,114 +3,112 @@ import Doctor from "../models/DoctorSchema.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
+// Generate JWT Token
 const generateToken = (user) => {
   return jwt.sign(
     { id: user._id, role: user.role },
     process.env.JWT_SECRET_KEY,
-    {
-      expiresIn: "15d",
-    }
+    { expiresIn: "15d" }
   );
 };
 
+// Helper to find user by email
+const findUserByEmail = async (email) => {
+  const user =
+    (await User.findOne({ email })) || (await Doctor.findOne({ email }));
+  return user;
+};
+
+// Register User
 export const register = async (req, res) => {
   const { email, password, name, role, photo, gender } = req.body;
 
+  // Validate role
+  const validRoles = ["patient", "doctor"];
+  if (!validRoles.includes(role)) {
+    return res.status(400).json({ success: false, message: "Invalid role" });
+  }
+
   try {
-    let user = null;
+    const existingUser = await findUserByEmail(email);
 
-    if (role === "patient") {
-      user = await User.findOne({ email });
-    } else if (role === "doctor") {
-      user = await Doctor.findOne({ email });
+    // Check if user already exists
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User already exists" });
     }
 
-    //check if user exist
-    if (user) {
-      return res.status(400).json({ message: "User already exist" });
-    }
-
-    //hash password
+    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
 
-    if (role === "patient") {
-      user = new User({
-        name,
-        email,
-        password: hashPassword,
-        photo,
-        gender,
-        role,
-      });
-    }
-    if (role === "doctor") {
-      user = new Doctor({
-        name,
-        email,
-        password: hashPassword,
-        photo,
-        gender,
-        role,
-      });
-    }
+    // Create user based on role
+    const userModel = role === "patient" ? User : Doctor;
+    const user = new userModel({
+      name,
+      email,
+      password: hashPassword,
+      photo,
+      gender,
+      role,
+    });
 
     await user.save();
 
-    res
-      .status(200)
-      .json({ success: true, message: "User successfully created" });
+    res.status(200).json({
+      success: true,
+      message: "User successfully registered",
+    });
   } catch (err) {
-    res
-      .status(500)
-      .json({ success: false, message: "Internal server error, Try again" });
+    console.error("Error during registration:", err);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    });
   }
 };
 
+// Login User
 export const login = async (req, res) => {
-  const { email } = req.body;
+  const { email, password } = req.body;
+
   try {
-    let user = null;
-    const patient = await User.findOne({ email });
-    const doctor = await Doctor.findOne({ email });
+    const user = await findUserByEmail(email);
 
-    if (patient) {
-      user = patient;
-    }
-    if (doctor) {
-      user = doctor;
-    }
-
-    //check if user exist or not
+    // Check if user exists
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
-    //compare password
-    const isPasswordMatch = await bcrypt.compare(
-      req.body.password,
-      user.password
-    );
-
+    // Compare passwords
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
       return res
         .status(400)
-        .json({ status: false, message: "Invalid credential" });
+        .json({ success: false, message: "Invalid credentials" });
     }
 
-    //get toke
+    // Generate token
     const token = generateToken(user);
 
-    const { password, role, appointments, ...rest } = user._doc;
+    // Exclude sensitive data from response
+    const { password: _, ...userData } = user._doc;
 
     res.status(200).json({
-      status: true,
-      message: "Successfully login",
+      success: true,
+      message: "Successfully logged in",
       token,
-      data: { ...rest },
-      role,
+      user: userData,
+      role: user.role,
     });
   } catch (err) {
-    res.status(500).json({ status: false, message: "Failed to login" });
+    console.error("Error during login:", err);
+    res.status(500).json({
+      success: false,
+      message: "Failed to login. Please try again later.",
+    });
   }
 };

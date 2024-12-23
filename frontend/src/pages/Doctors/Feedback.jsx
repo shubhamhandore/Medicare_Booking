@@ -27,7 +27,7 @@ const Feedback = ({ reviews, totalRating }) => {
                   <img
                     className="w-full"
                     src={review?.user?.photo || avatar}
-                    alt=""
+                    alt={review?.user?.name || "User avatar"}
                   />
                 </figure>
                 <div>

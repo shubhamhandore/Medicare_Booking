@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import { formateDate } from "../../utils/formateDate";
 
-const DoctorAbout = ({ name, about, qualifications, experience }) => {
+const DoctorAbout = ({ name, about, qualifications = [], experience = [] }) => {
   return (
     <div>
       <div>
@@ -21,27 +21,29 @@ const DoctorAbout = ({ name, about, qualifications, experience }) => {
         </h3>
 
         <ul className="pt-4 md:p-5">
-          {qualifications?.map((item, index) => (
-            // eslint-disable-next-line react/jsx-key
-            <li
-              // eslint-disable-next-line react/no-unknown-property
-              keys={index}
-              className="flex flex-col sm:flex-row sm:justify-between sm:items-end md:gap-5 mb-[30px]"
-            >
-              <div>
-                <span className="text-irisBlueColor text-[15px] leading-6 font-semibold">
-                  {formateDate(item.startingDate)} -{" "}
-                  {formateDate(item.endingDate)}
-                </span>
-                <p className="text-[16px] leading-6 font-medium text-textColor">
-                  {item.degree}
+          {qualifications.length > 0 ? (
+            qualifications.map((item, index) => (
+              <li
+                key={index}
+                className="flex flex-col sm:flex-row sm:justify-between sm:items-end md:gap-5 mb-[30px]"
+              >
+                <div>
+                  <span className="text-irisBlueColor text-[15px] leading-6 font-semibold">
+                    {formateDate(item.startingDate)} -{" "}
+                    {formateDate(item.endingDate)}
+                  </span>
+                  <p className="text-[16px] leading-6 font-medium text-textColor">
+                    {item.degree}
+                  </p>
+                </div>
+                <p className="text-[16px] leading-5 font-medium text-textColor">
+                  {item.university}
                 </p>
-              </div>
-              <p className="text-[16px] leading-5 font-medium text-textColor">
-                {item.university}
-              </p>
-            </li>
-          ))}
+              </li>
+            ))
+          ) : (
+            <p className="text-textColor">No qualifications available</p>
+          )}
         </ul>
       </div>
 
@@ -51,24 +53,28 @@ const DoctorAbout = ({ name, about, qualifications, experience }) => {
         </h3>
 
         <ul className="grid sm:grid-cols-2 gap-[30px] pt-4 md:p-5">
-          {experience?.map((item, index) => (
-            <li
-              key={index}
-              className="p-4 rounded bg-[#fff9ea]"
-            >
-              <span className="text-yellowColor text-[15px] leading-6 font-semibold">
-                {formateDate(item.startingDate)} -{" "}
-                {formateDate(item.endingDate)}
-              </span>
-              <p className="text-[16px] leading-6 font-medium text-textColor">
-                {item.postion}
-              </p>
+          {experience.length > 0 ? (
+            experience.map((item, index) => (
+              <li
+                key={index}
+                className="p-4 rounded bg-[#fff9ea]"
+              >
+                <span className="text-yellowColor text-[15px] leading-6 font-semibold">
+                  {formateDate(item.startingDate)} -{" "}
+                  {formateDate(item.endingDate)}
+                </span>
+                <p className="text-[16px] leading-6 font-medium text-textColor">
+                  {item.position}
+                </p>
 
-              <p className="text-[16px] leading-6 font-medium text-textColor">
-                {item.hospital}
-              </p>
-            </li>
-          ))}
+                <p className="text-[16px] leading-6 font-medium text-textColor">
+                  {item.hospital}
+                </p>
+              </li>
+            ))
+          ) : (
+            <p className="text-textColor">No experience available</p>
+          )}
         </ul>
       </div>
     </div>

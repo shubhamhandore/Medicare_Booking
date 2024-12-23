@@ -36,11 +36,33 @@ const DoctorDetails = () => {
     photo,
   } = doctor;
 
+  const renderTabContent = () => {
+    if (tab === "about") {
+      return (
+        <DoctorAbout
+          name={name}
+          about={about}
+          qualifications={qualifications}
+          experiences={experiences}
+        />
+      );
+    }
+    if (tab === "feedback") {
+      return (
+        <Feedback
+          reviews={reviews}
+          totalRating={totalRating}
+        />
+      );
+    }
+    return null;
+  };
+
   return (
     <section>
       <div className="max-w-[1170px] px-5 mx-auto">
         {loading && <Loader />}
-        {error && <Error />}
+        {error && <Error message={error} />}
 
         {!loading && !error && (
           <div className="grid md:grid-cols-3 gap-[50px]">
@@ -49,7 +71,7 @@ const DoctorDetails = () => {
                 <figure className="max-w-[200px] max-h-[200px]">
                   <img
                     src={photo}
-                    alt=""
+                    alt={`${name}'s photo`}
                     className="w-full"
                   />
                 </figure>
@@ -65,7 +87,7 @@ const DoctorDetails = () => {
                     <span className="flex items-center gap-[6px] text-[14px] leading-5 lg:text-[16px] lg:leading-7 font-semibold text-headingColor">
                       <img
                         src={starIcon}
-                        alt=""
+                        alt="Star icon"
                       />{" "}
                       {averageRating}
                     </span>
@@ -83,6 +105,7 @@ const DoctorDetails = () => {
               <div className="mt-[50px] border-b border-solid border-[#0066ff34]">
                 <button
                   onClick={() => setTab("about")}
+                  aria-selected={tab === "about"}
                   className={`${
                     tab === "about" &&
                     "border-b border-solid border-primaryColor"
@@ -93,6 +116,7 @@ const DoctorDetails = () => {
 
                 <button
                   onClick={() => setTab("feedback")}
+                  aria-selected={tab === "feedback"}
                   className={`${
                     tab === "feedback" &&
                     "border-b border-solid border-primaryColor"
@@ -102,22 +126,7 @@ const DoctorDetails = () => {
                 </button>
               </div>
 
-              <div className="mt-[50px]">
-                {tab === "about" && (
-                  <DoctorAbout
-                    name={name}
-                    about={about}
-                    qualifications={qualifications}
-                    experiences={experiences}
-                  />
-                )}
-                {tab === "feedback" && (
-                  <Feedback
-                    reviews={reviews}
-                    totalRating={totalRating}
-                  />
-                )}
-              </div>
+              <div className="mt-[50px]">{renderTabContent()}</div>
             </div>
 
             <div>

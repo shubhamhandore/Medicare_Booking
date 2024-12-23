@@ -16,17 +16,20 @@ const Login = () => {
   const navigate = useNavigate();
   const { dispatch } = useContext(authContext);
 
+  // Handle input changes and update the state
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Form submit handler
   const submitHandler = async (event) => {
     event.preventDefault();
     setLoading(true);
 
     try {
+      // Send login request to the server
       const res = await fetch(`${BASE_URL}/auth/login`, {
-        method: "post",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -35,10 +38,12 @@ const Login = () => {
 
       const result = await res.json();
 
+      // Handle server response
       if (!res.ok) {
         throw new Error(result.message);
       }
 
+      // Dispatch login success action to update the global state
       dispatch({
         type: "LOGIN_SUCCESS",
         payload: {
@@ -48,28 +53,27 @@ const Login = () => {
         },
       });
 
-      console.log(result, "login data");
-
       setLoading(false);
       toast.success(result.message);
-      navigate("/home");
+      navigate("/home"); // Redirect to the home page
     } catch (err) {
-      toast.error(err.message);
       setLoading(false);
+      toast.error(err.message); // Show error message
     }
   };
 
   return (
-    <section className="px- lg:px-0">
+    <section className="px-4 lg:px-0">
       <div className="w-full max-w-[570px] mx-auto rounded-lg shadow-md md:p-10">
         <h3 className="text-headingColor text-[22px] leading-9 font-bold mb-10">
-          Hello! <span className="text-primaryColor">Welcome</span>Back 🎉{" "}
+          Hello! <span className="text-primaryColor">Welcome</span> Back 🎉
         </h3>
 
         <form
           className="py-4 md:py-0"
           onSubmit={submitHandler}
         >
+          {/* Email Input */}
           <div className="mb-5">
             <input
               type="email"
@@ -77,11 +81,12 @@ const Login = () => {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className="w-full py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor  cursor-pointer"
+              className="w-full py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-pointer"
               required
             />
           </div>
 
+          {/* Password Input */}
           <div className="mb-5">
             <input
               type="password"
@@ -89,11 +94,12 @@ const Login = () => {
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className="w-full py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor  cursor-pointer"
+              className="w-full py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-pointer"
               required
             />
           </div>
 
+          {/* Submit Button */}
           <div className="mt-7">
             <button
               type="submit"
@@ -110,6 +116,7 @@ const Login = () => {
             </button>
           </div>
 
+          {/* Link to Register page */}
           <p className="mt-5 text-textColor text-center">
             Don&apos;t have an account?
             <Link

@@ -4,10 +4,10 @@ import FaqItem from "./FaqItem";
 const FaqList = () => {
   return (
     <ul className="mt-[38px]">
-      {faqs.map((item, index) => (
+      {faqs.map((item) => (
         <FaqItem
           item={item}
-          key={index}
+          key={item.id}
         />
       ))}
     </ul>

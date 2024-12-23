@@ -40,6 +40,7 @@ const FeedbackForm = () => {
 
       setRating(0);
       setReviewText("");
+      setHover(0); // Reset hover state after successful submission
       setLoading(false);
       toast.success(result.message);
     } catch (err) {
@@ -94,7 +95,7 @@ const FeedbackForm = () => {
       <button
         type="submit"
         className="btn"
-        onClick={handleSubmitReview}
+        aria-live="assertive" // Improve accessibility for live updates
       >
         {loading ? (
           <HashLoader

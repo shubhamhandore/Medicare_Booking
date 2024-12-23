@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import heroImg01 from "../assets/images/hero-img01.jpeg";
 import heroImg02 from "../assets/images/hero-img02.jpeg";
@@ -74,21 +75,21 @@ const Home = () => {
             <div className="flex gap-[30px] justify-end">
               <div>
                 <img
-                  className="w-full"
+                  className="w-[80%] rounded-lg shadow-xl"
                   src={heroImg01}
-                  alt=""
+                  alt="Hero Image 1"
                 />
               </div>
               <div className="mt-[30px]">
                 <img
-                  className="w-full mb-[30px]"
+                  className="w-[80%] rounded-lg shadow-xl mb-[30px]"
                   src={heroImg02}
-                  alt=""
+                  alt="Hero Image 2"
                 />
                 <img
-                  className="w-full"
+                  className="w-[80%] rounded-lg shadow-xl"
                   src={heroImg03}
-                  alt=""
+                  alt="Hero Image 3"
                 />
               </div>
             </div>
@@ -96,6 +97,7 @@ const Home = () => {
         </div>
       </section>
       {/* ========= hero section end ========= */}
+
       <section>
         <div className="container">
           <div className="lg:w-[470px] mx-auto">
@@ -111,8 +113,9 @@ const Home = () => {
             <div className="py-[30px] px-5">
               <div className="flex items-center justify-center">
                 <img
+                  className="w-[60%] rounded-md"
                   src={icon01}
-                  alt=""
+                  alt="Icon 1"
                 />
               </div>
 
@@ -137,8 +140,9 @@ const Home = () => {
             <div className="py-[30px] px-5">
               <div className="flex items-center justify-center">
                 <img
+                  className="w-[60%] rounded-md"
                   src={icon02}
-                  alt=""
+                  alt="Icon 2"
                 />
               </div>
 
@@ -163,8 +167,9 @@ const Home = () => {
             <div className="py-[30px] px-5">
               <div className="flex items-center justify-center">
                 <img
+                  className="w-[60%] rounded-md"
                   src={icon03}
-                  alt=""
+                  alt="Icon 3"
                 />
               </div>
 
@@ -235,9 +240,9 @@ const Home = () => {
             {/* ========= feature image ========= */}
             <div className="relative z-10 xl:w-[770px] flex justify-end mt-[50px] lg:mt-0">
               <img
-                className="w-3/4"
+                className="w-3/4 rounded-lg shadow-xl"
                 src={featureImg}
-                alt=""
+                alt="Feature"
               />
 
               <div className="w-[150px] lg:w-[248px] bg-white absolute bottom-[50px] left-0 md:bottom-[100px] md:left-5 z-20 p-2 pb-3 lg:pt-4 lg:px-4 lg:pb-[26px] rounded-[10px]">
@@ -253,7 +258,7 @@ const Home = () => {
                   <span className="w-5 h-5 lg:w-[34px] lg:h-[34px] flex items-center justify-center bg-yellowColor rounded py-1 px-[6px] lg:py-3 lg:px-[9px]">
                     <img
                       src={videoImg}
-                      alt=""
+                      alt="Video Icon"
                     />
                   </span>
                 </div>
@@ -265,7 +270,7 @@ const Home = () => {
                 <div className="flex items-center gap-[6px] lg:gap-[10px] mt-2 lg:mt-[18px]">
                   <img
                     src={avatarImg}
-                    alt=""
+                    alt="Doctor"
                   />
                   <h4 className="text-[10px] leading-3 lg:text-[16px] lg:leading-[22px] font-[700] text-headingColor">
                     Dr. Tejas Narode
@@ -292,7 +297,7 @@ const Home = () => {
           <DoctorList />
         </div>
       </section>
-      {/* ========= our great doctor ========= */}
+      {/* ========= our great doctor end ========= */}
 
       {/* ========= faq section ========= */}
       <section>
@@ -300,8 +305,9 @@ const Home = () => {
           <div className="flex justify-between gap-[50px] lg:gap-0">
             <div className="w-1/2 hidden md:block">
               <img
+                className="rounded-lg shadow-xl"
                 src={faqImg}
-                alt=""
+                alt="FAQ"
               />
             </div>
             <div className="w-full md:w-1/2">
@@ -314,21 +320,6 @@ const Home = () => {
         </div>
       </section>
       {/* ========= faq section end ========= */}
-
-      {/* ========= testimonial ========= */}
-      {/* <section>
-        <div className="container">
-          <div className="xl:w-[470px] mx-auto">
-            <h2 className="heading text-center">What our patient say</h2>
-            <p className="text_para text-center">
-              World-class care for everyone. Our healthy system offers
-              unmatched, expert health care
-            </p>
-          </div>
-          <Testimonial />
-        </div>
-      </section> */}
-      {/* ========= testimonial end ========= */}
     </>
   );
 };

@@ -1,10 +1,14 @@
 import PropTypes from "prop-types";
 import convertTime from "../../utils/convertTime";
-import { BASE_URL, token } from "./../../config";
+import { BASE_URL, token } from "../../config";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 const SidePanel = ({ doctorId, ticketPrice, timeSlots }) => {
+  const [loading, setLoading] = useState(false);
+
   const bookingHandler = async () => {
+    setLoading(true);
     try {
       const res = await fetch(
         `${BASE_URL}/bookings/checkout-session/${doctorId}`,
@@ -26,6 +30,8 @@ const SidePanel = ({ doctorId, ticketPrice, timeSlots }) => {
       }
     } catch (err) {
       toast.error(err.message || "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,8 +78,9 @@ const SidePanel = ({ doctorId, ticketPrice, timeSlots }) => {
         onClick={bookingHandler}
         className="btn px-2 w-full rounded-md"
         aria-label="Book an appointment"
+        disabled={loading}
       >
-        Book Appointment
+        {loading ? "Booking..." : "Book Appointment"}
       </button>
     </div>
   );

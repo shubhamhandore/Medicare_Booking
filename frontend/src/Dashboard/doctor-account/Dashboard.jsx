@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import Loader from "../../components/Loader/Loading";
 import Error from "../../components/Loader/Error";
 import useGetProfile from "../../hooks/useFetchData";
@@ -13,16 +14,15 @@ const Dashboard = () => {
   const { data, loading, error } = useGetProfile(
     `${BASE_URL}/doctors/profile/me`
   );
-
   const [tab, setTab] = useState("overview");
 
   return (
     <section>
       <div className="max-w-[1170px] px-5 mx-auto">
         {loading && !error && <Loader />}
-        {error && !loading && <Error />}
+        {error && !loading && <Error message={error.message} />}
 
-        {!loading && !error && (
+        {data && !loading && !error && (
           <div className="grid lg:grid-cols-3 gap-[30px] lg:gap-[50px]">
             <Tabs
               tab={tab}
@@ -30,7 +30,7 @@ const Dashboard = () => {
             />
 
             <div className="lg:col-span-2">
-              {data.isApproved === "pending" && (
+              {data?.isApproved === "pending" && (
                 <div className="flex p-4 mb-4 text-yellow-800 bg-yellow-50 rounded-lg">
                   <svg
                     aria-hidden="true"
@@ -45,11 +45,10 @@ const Dashboard = () => {
                       clipRule="evenodd"
                     ></path>
                   </svg>
-
                   <span className="sr-only">Info</span>
                   <div className="ml-3 text-sm font-medium">
-                    To get approval please complete your profile. We&apos;ll
-                    review manually and approve within 3days
+                    To get approval please complete your profile. We'll review
+                    manually and approve within 3days.
                   </div>
                 </div>
               )}
@@ -61,13 +60,11 @@ const Dashboard = () => {
                       <figure className="max-w-[200px] max-h-[200px]">
                         <img
                           src={data?.photo}
-                          alt=""
+                          alt="Doctor's photo"
                           className="w-full"
                         />
                       </figure>
-
                       <div>
-                        {" "}
                         <span className="bg-[#CCF0F3] text-irisBlueColor py-1 px-4 lg:py-2 lg:px-6 rounded text-[12px] leading-4 lg:text-[16px] lg:leading-6 font-semibold">
                           {data.specialization}
                         </span>
@@ -78,12 +75,12 @@ const Dashboard = () => {
                           <span className="flex items-center gap-[6px] text-headingColor text-[14px] leading-5 lg:text-[16px] lg:leading-6 font-semibold">
                             <img
                               src={starIcon}
-                              alt=""
+                              alt="Star icon"
                             />
-                            {data.averageRating}
+                            {data.averageRating || "N/A"}
                           </span>
                           <span className="text-textColor text-[14px] leading-5 lg:text-[16px] lg:leading-6 font-semibold">
-                            ({data.totalRating})
+                            ({data.totalRating || 0})
                           </span>
                         </div>
                         <p className="text_para font-[15px] lg:max-w-[390px] leading-6">

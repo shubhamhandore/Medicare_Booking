@@ -27,14 +27,18 @@ const FaqItem = ({ item }) => {
         </div>
       </div>
 
-      {isOpen && (
-        <div className="mt-4">
-          {" "}
+      {/* Smooth Transition */}
+      <div
+        className={`mt-4 transition-all duration-300 ease-in-out overflow-hidden ${
+          isOpen ? "max-h-[500px]" : "max-h-0"
+        }`}
+      >
+        {isOpen && (
           <p className="text-[14px] leading-6 lg:text-[16px] lg:leading-7 font-[400] text-headingColor">
             {item.content}
           </p>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

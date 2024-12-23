@@ -1,4 +1,40 @@
+import { useState } from "react";
+import { toast } from "react-toastify";
+import "../App.css";
+
 const Contact = () => {
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    // Basic validation
+    if (!email || !subject || !message) {
+      toast.error("All fields are required.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Assume form submission via API or another method
+      // For now, we'll log the values to the console
+      console.log({ email, subject, message });
+      // Simulate a successful form submission
+      toast.success("Your message has been sent successfully!");
+      setEmail("");
+      setSubject("");
+      setMessage("");
+    } catch (err) {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section>
       <div className="px-4 mx-auto max-w-screen-md">
@@ -8,7 +44,7 @@ const Contact = () => {
           us know.
         </p>
         <form
-          action="#"
+          onSubmit={handleSubmit}
           className="space-y-8"
         >
           <div>
@@ -22,6 +58,8 @@ const Contact = () => {
               type="email"
               id="email"
               placeholder="example@gmail.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="form_input mt-1"
             />
           </div>
@@ -36,6 +74,8 @@ const Contact = () => {
               type="text"
               id="subject"
               placeholder="Let us know how we can help you"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
               className="form_input mt-1"
             />
           </div>
@@ -51,10 +91,18 @@ const Contact = () => {
               type="text"
               id="message"
               placeholder="Leave a comment..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               className="form_input mt-1"
             />
           </div>
-          <button type="submit" className="btn rounded sm:w-fit">Submit</button>
+          <button
+            type="submit"
+            className="btn rounded sm:w-fit"
+            disabled={loading}
+          >
+            {loading ? "Submitting..." : "Submit"}
+          </button>
         </form>
       </div>
     </section>

@@ -3,17 +3,25 @@ import React from "react";
 import startIcon from "../../assets/images/Star.png";
 import { Link } from "react-router-dom";
 import { BsArrowRight } from "react-icons/bs";
+import PropTypes from "prop-types"; // Import PropTypes for type checking
 
 const DoctorCard = ({ doctor }) => {
   const { name, avgRating, totalRating, photo, specialization, experiences } =
     doctor;
+
+  // Safely extract hospital information from experiences array
+  const hospitalName =
+    experiences && experiences.length > 0
+      ? experiences[0]?.hospital
+      : "Unknown Hospital";
+
   return (
     <div className="p-3 lg:p-5">
       <div>
         <img
           src={photo}
           className="w-full"
-          alt=""
+          alt={`Photo of Dr. ${name}`}
         />
       </div>
 
@@ -30,7 +38,7 @@ const DoctorCard = ({ doctor }) => {
           <span className="flex items-center gap-[6px] text-[14px] leading-6 lg:text-[16px] lg:leading-7 font-semibold text-headingColor">
             <img
               src={startIcon}
-              alt=""
+              alt="Rating star"
             />{" "}
             {avgRating}
           </span>
@@ -41,14 +49,9 @@ const DoctorCard = ({ doctor }) => {
       </div>
 
       <div className="mt-[18px] lg:mt-5 flex items-center justify-between">
-        <div>
-          {/* <h3 className="text-[16px] leading-7 lg:text-[18px] lg:leading-[30px] font-semibold text-headingColor">
-            +{totalPatients} patient{" "}
-          </h3> */}
-          <p className="text-[14px] leading-6 font-[400] text-textColor">
-            At {experiences && experiences[0]?.hospital}
-          </p>
-        </div>
+        <p className="text-[14px] leading-6 font-[400] text-textColor">
+          At {hospitalName}
+        </p>
 
         <Link
           to={`/doctors/${doctor._id}`}
@@ -59,6 +62,23 @@ const DoctorCard = ({ doctor }) => {
       </div>
     </div>
   );
+};
+
+// Prop-Types for DoctorCard component
+DoctorCard.propTypes = {
+  doctor: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    avgRating: PropTypes.number.isRequired,
+    totalRating: PropTypes.number.isRequired,
+    photo: PropTypes.string.isRequired,
+    specialization: PropTypes.string.isRequired,
+    experiences: PropTypes.arrayOf(
+      PropTypes.shape({
+        hospital: PropTypes.string,
+      })
+    ),
+  }).isRequired,
 };
 
 export default DoctorCard;

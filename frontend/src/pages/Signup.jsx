@@ -29,13 +29,22 @@ const Signup = () => {
   const handleFileInputChange = async (event) => {
     const file = event.target.files[0];
 
-    const data = await uploadImageToCloudinary(file);
+    if (!file) return;
 
-    setPreviewURL(data.url);
-    setSelectedFile(data.url);
-    setFormData({ ...formData, photo: data.url });
+    // Validate file type
+    if (!["image/jpeg", "image/png"].includes(file.type)) {
+      toast.error("Please upload a valid image file (.jpg or .png).");
+      return;
+    }
 
-    //later we will use cloudinary to upload img
+    try {
+      const data = await uploadImageToCloudinary(file);
+      setPreviewURL(data.url);
+      setSelectedFile(data.url);
+      setFormData({ ...formData, photo: data.url });
+    } catch (error) {
+      toast.error("Failed to upload image. Please try again.");
+    }
   };
 
   const submitHandler = async (event) => {
@@ -44,7 +53,7 @@ const Signup = () => {
 
     try {
       const res = await fetch(`${BASE_URL}/auth/register`, {
-        method: "post",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -65,6 +74,7 @@ const Signup = () => {
       setLoading(false);
     }
   };
+
   return (
     <section className="px-5 xl:px-0">
       <div className="max-w-[1170px] mx-auto">
@@ -93,7 +103,7 @@ const Signup = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full pr-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor  cursor-pointer"
+                  className="w-full pr-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-pointer"
                   required
                 />
               </div>
@@ -105,7 +115,7 @@ const Signup = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full pr-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor  cursor-pointer"
+                  className="w-full pr-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-pointer"
                   required
                 />
               </div>
@@ -117,7 +127,7 @@ const Signup = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="w-full pr-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor  cursor-pointer"
+                  className="w-full pr-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-pointer"
                   required
                 />
               </div>
